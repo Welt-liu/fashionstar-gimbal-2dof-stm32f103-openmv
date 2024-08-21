@@ -989,18 +989,18 @@ Image Symbol Table
     ..\User\ring_buffer\ring_buffer.c        0x00000000   Number         0  ring_buffer.o ABSOLUTE
     ..\User\sys_tick\sys_tick.c              0x00000000   Number         0  sys_tick.o ABSOLUTE
     ..\User\usart\usart.c                    0x00000000   Number         0  usart.o ABSOLUTE
-    D:\Program Files\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\src\misc.c 0x00000000   Number         0  misc.o ABSOLUTE
-    D:\Program Files\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\src\stm32f10x_dbgmcu.c 0x00000000   Number         0  stm32f10x_dbgmcu.o ABSOLUTE
-    D:\Program Files\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\src\stm32f10x_dma.c 0x00000000   Number         0  stm32f10x_dma.o ABSOLUTE
-    D:\Program Files\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\src\stm32f10x_exti.c 0x00000000   Number         0  stm32f10x_exti.o ABSOLUTE
-    D:\Program Files\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\src\stm32f10x_flash.c 0x00000000   Number         0  stm32f10x_flash.o ABSOLUTE
-    D:\Program Files\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\src\stm32f10x_gpio.c 0x00000000   Number         0  stm32f10x_gpio.o ABSOLUTE
-    D:\Program Files\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\src\stm32f10x_i2c.c 0x00000000   Number         0  stm32f10x_i2c.o ABSOLUTE
-    D:\Program Files\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\src\stm32f10x_rcc.c 0x00000000   Number         0  stm32f10x_rcc.o ABSOLUTE
-    D:\Program Files\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\src\stm32f10x_rtc.c 0x00000000   Number         0  stm32f10x_rtc.o ABSOLUTE
-    D:\Program Files\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\src\stm32f10x_tim.c 0x00000000   Number         0  stm32f10x_tim.o ABSOLUTE
-    D:\Program Files\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\src\stm32f10x_usart.c 0x00000000   Number         0  stm32f10x_usart.o ABSOLUTE
-    D:\Program Files\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\RTE_Driver\GPIO_STM32F10x.c 0x00000000   Number         0  gpio_stm32f10x.o ABSOLUTE
+    C:\Users\ljjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\src\misc.c 0x00000000   Number         0  misc.o ABSOLUTE
+    C:\Users\ljjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\src\stm32f10x_dbgmcu.c 0x00000000   Number         0  stm32f10x_dbgmcu.o ABSOLUTE
+    C:\Users\ljjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\src\stm32f10x_dma.c 0x00000000   Number         0  stm32f10x_dma.o ABSOLUTE
+    C:\Users\ljjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\src\stm32f10x_exti.c 0x00000000   Number         0  stm32f10x_exti.o ABSOLUTE
+    C:\Users\ljjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\src\stm32f10x_flash.c 0x00000000   Number         0  stm32f10x_flash.o ABSOLUTE
+    C:\Users\ljjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\src\stm32f10x_gpio.c 0x00000000   Number         0  stm32f10x_gpio.o ABSOLUTE
+    C:\Users\ljjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\src\stm32f10x_i2c.c 0x00000000   Number         0  stm32f10x_i2c.o ABSOLUTE
+    C:\Users\ljjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\src\stm32f10x_rcc.c 0x00000000   Number         0  stm32f10x_rcc.o ABSOLUTE
+    C:\Users\ljjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\src\stm32f10x_rtc.c 0x00000000   Number         0  stm32f10x_rtc.o ABSOLUTE
+    C:\Users\ljjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\src\stm32f10x_tim.c 0x00000000   Number         0  stm32f10x_tim.o ABSOLUTE
+    C:\Users\ljjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\src\stm32f10x_usart.c 0x00000000   Number         0  stm32f10x_usart.o ABSOLUTE
+    C:\Users\ljjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\RTE_Driver\GPIO_STM32F10x.c 0x00000000   Number         0  gpio_stm32f10x.o ABSOLUTE
     RTE\Device\STM32F103C8\startup_stm32f10x_md.s 0x00000000   Number         0  startup_stm32f10x_md.o ABSOLUTE
     RTE\Device\STM32F103C8\system_stm32f10x.c 0x00000000   Number         0  system_stm32f10x.o ABSOLUTE
     cdcmple.s                                0x00000000   Number         0  cdcmple.o ABSOLUTE
@@ -1591,23 +1591,23 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       248         32          0          0          0       1224   button.o
-       714         12          0          0          0       8776   fashion_star_uart_servo.o
-       896        180          0         72          0       9318   gimbal.o
-       716        132          0         40          0     239715   main.o
-       132         22          0          0          0       1883   misc.o
-       436          0          0          0          0      11789   ring_buffer.o
-        36          8        236          0       1024        924   startup_stm32f10x_md.o
-        52         12          0          0          0       1244   stm32f10x_exti.o
-       278          0          0          0          0       2256   stm32f10x_gpio.o
-       276         32          0         20          0       4834   stm32f10x_rcc.o
-       442          6          0          0          0       6813   stm32f10x_usart.o
-       312         44          0          4          0      20657   sys_tick.o
-       328         28          0         20          0       2885   system_stm32f10x.o
-       864        108          0          0       3120       7313   usart.o
+       248         32          0          0          0       1232   button.o
+       714         12          0          0          0       8808   fashion_star_uart_servo.o
+       896        180          0         72          0       9374   gimbal.o
+       716        132          0         40          0     239747   main.o
+       132         22          0          0          0       1939   misc.o
+       436          0          0          0          0      11845   ring_buffer.o
+        36          8        236          0       1024        940   startup_stm32f10x_md.o
+        52         12          0          0          0       1276   stm32f10x_exti.o
+       278          0          0          0          0       2296   stm32f10x_gpio.o
+       276         32          0         20          0       4914   stm32f10x_rcc.o
+       442          6          0          0          0       6949   stm32f10x_usart.o
+       312         44          0          4          0      20689   sys_tick.o
+       328         28          0         20          0       2905   system_stm32f10x.o
+       864        108          0          0       3120       7341   usart.o
 
     ----------------------------------------------------------------------
-      5740        616        268        156       4144     319631   Object Totals
+      5740        616        268        156       4144     320255   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         10          0          0          0          0          0   (incl. Padding)
 
@@ -1674,8 +1674,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     10248        722        268        160       4144     317575   Grand Totals
-     10248        722        268        160       4144     317575   ELF Image Totals
+     10248        722        268        160       4144     318199   Grand Totals
+     10248        722        268        160       4144     318199   ELF Image Totals
      10248        722        268        160          0          0   ROM Totals
 
 ==============================================================================

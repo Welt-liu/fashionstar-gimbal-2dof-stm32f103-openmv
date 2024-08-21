@@ -8,7 +8,7 @@ import ustruct as struct
 
 
 # 红色小球的LAB色彩空间阈值 (L Min, L Max, A Min, A Max, B Min, B Max)
-RED_BALL_THRESHOLD = (57, 74, 38, 85, -21, 62)
+RED_BALL_THRESHOLD = (20, 64, 24, 107, -3, 51)
 
 # OpenMV感光芯片初始化
 sensor.reset() # 重置感芯片
