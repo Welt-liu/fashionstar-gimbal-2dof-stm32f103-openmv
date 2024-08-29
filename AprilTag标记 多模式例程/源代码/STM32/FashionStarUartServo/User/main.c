@@ -6,7 +6,6 @@
 #include "sys_tick.h"
 #include "fashion_star_uart_servo.h"
 #include "gimbal.h"
-#include "button.h"
 
 #define TRUE 1
 #define FALSE 0

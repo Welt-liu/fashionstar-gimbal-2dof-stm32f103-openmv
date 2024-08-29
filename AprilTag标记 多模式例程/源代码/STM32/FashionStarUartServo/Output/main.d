@@ -36,4 +36,3 @@
 ..\output\main.o: ..\User\sys_tick\sys_tick.h
 ..\output\main.o: ..\User\fashion_star_uart_servo\fashion_star_uart_servo.h
 ..\output\main.o: ..\User\gimbal\gimbal.h
-..\output\main.o: ..\User\button\button.h

@@ -412,11 +412,6 @@
               <FileType>1</FileType>
               <FilePath>..\User\gimbal\gimbal.c</FilePath>
             </File>
-            <File>
-              <FileName>button.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\button\button.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
