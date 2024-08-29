@@ -13,11 +13,11 @@
 #define GIMBAL_SERVO_SPEED 200.0 // 云台旋转速度 (单位: °/s)
 
 // 机械结构参数
-#define OQ 25.0 // 云台(Gimbal)坐标系原点距离纸板(Board)坐标系原点的直线距离
+#define OQ 28.0 // 云台(Gimbal)坐标系原点距离纸板(Board)坐标系原点的直线距离
 #define OL 5.4 // 云台坐标系原点距离激光轴心(Laser)的距离
 
 // 纸板网格参数
-#define GRID_WIDTH 1.916 // 网格的宽度 (单位cm) 以实际测量为准
+#define GRID_WIDTH 1.85 // 网格的宽度 (单位cm) 以实际测量为准
 #define GRID_COLUMN  12 // 网格的列数
 #define GRID_ROW 	 8 	// 网格的行数
 
@@ -163,13 +163,13 @@ int main (void)
 		// TestCorner();
 		
 		// 测试水平方向打点
-		// TestHorizontal();
+		 TestHorizontal();
 		
 		// 测试垂直方向打点
 		// TestVertical();
 		
 		// 测试遍历所有的网格
-		TestVisitAllGrid();
+//		TestVisitAllGrid();
 		
 	}
 }

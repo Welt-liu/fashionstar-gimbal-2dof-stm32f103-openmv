@@ -110,7 +110,7 @@ dx_{offset} = old\_x_{offset} - x_{offset}
 $$
 
 $$
-dyaw =  K_p * x_{offset} + K_d*dx_{offset} 
+dyaw =  K_p * x_{offset} + K_d*dx_{offset}
 $$
 
 

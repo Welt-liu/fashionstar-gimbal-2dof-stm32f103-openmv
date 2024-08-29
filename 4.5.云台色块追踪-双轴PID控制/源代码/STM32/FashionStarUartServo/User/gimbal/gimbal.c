@@ -1,55 +1,55 @@
 #include "gimbal.h"
 
-// Æ«º½½ÇÓë¶æ»ú½Ç¶È ÏßĞÔÓ³Éä
+// åèˆªè§’ä¸èˆµæœºè§’åº¦ çº¿æ€§æ˜ å°„
 // servo = K_yaw2srv * yaw + b_yaw2srv
-float K_yaw2srv; // Æ«º½½Ç×ª»»Îª¶æ»ú½Ç¶ÈµÄ±ÈÀıÏµÊı
-float b_yaw2srv; // Æ«º½½Ç×ª»»Îª¶æ»ú½Ç¶ÈµÄÆ«ÒÆÁ¿
+float K_yaw2srv; // åèˆªè§’è½¬æ¢ä¸ºèˆµæœºè§’åº¦çš„æ¯”ä¾‹ç³»æ•°
+float b_yaw2srv; // åèˆªè§’è½¬æ¢ä¸ºèˆµæœºè§’åº¦çš„åç§»é‡
 // yaw = K_srv2yaw * servo + b_srv2yaw 
-float K_srv2yaw; // ¶æ»ú½Ç¶È×ª»»ÎªÆ«º½½ÇµÄ±ÈÀıÏµÊı
-float b_srv2yaw; // ¶æ»ú½Ç¶È×ª»»ÎªÆ«º½½ÇµÄÆ«ÒÆÁ¿
-// ¸©Ñö½ÇÓë¶æ»ú½Ç¶È (ÏßĞÔÓ³Éä)
+float K_srv2yaw; // èˆµæœºè§’åº¦è½¬æ¢ä¸ºåèˆªè§’çš„æ¯”ä¾‹ç³»æ•°
+float b_srv2yaw; // èˆµæœºè§’åº¦è½¬æ¢ä¸ºåèˆªè§’çš„åç§»é‡
+// ä¿¯ä»°è§’ä¸èˆµæœºè§’åº¦ (çº¿æ€§æ˜ å°„)
 // servo = K_pitch2srv * pitch + b_yaw2srv
-float K_pitch2srv; // ¸©Ñö½Ç×ª»»Îª¶æ»ú½Ç¶ÈµÄ±ÈÀıÏµÊı
-float b_pitch2srv; // ¸©Ñö½Ç×ª»»Îª¶æ»ú½Ç¶ÈµÄÆ«ÒÆÁ¿
+float K_pitch2srv; // ä¿¯ä»°è§’è½¬æ¢ä¸ºèˆµæœºè§’åº¦çš„æ¯”ä¾‹ç³»æ•°
+float b_pitch2srv; // ä¿¯ä»°è§’è½¬æ¢ä¸ºèˆµæœºè§’åº¦çš„åç§»é‡
 // pitch = K_srv2pitch * servo + b_srv2pitch
-float K_srv2pitch; // ¶æ»ú½Ç¶È×ª»»Îª¸©Ñö½ÇµÄ±ÈÀıÏµÊı
-float b_srv2pitch; // ¶æ»ú½Ç¶È×ª»»Îª¸©Ñö½ÇµÄÆ«ÒÆÁ¿ 
+float K_srv2pitch; // èˆµæœºè§’åº¦è½¬æ¢ä¸ºä¿¯ä»°è§’çš„æ¯”ä¾‹ç³»æ•°
+float b_srv2pitch; // èˆµæœºè§’åº¦è½¬æ¢ä¸ºä¿¯ä»°è§’çš„åç§»é‡ 
 
-// ÔÆÌ¨Î»×Ë×´Ì¬
-float curSrvYaw = 0; 	// Æ«º½½ÇµÄÔ­Ê¼¶æ»úµ±Ç°½Ç¶È (µ¥Î» ¡ã)
-float curSrvPitch = 0; 	// ¸©Ñö½ÇµÄÔ­Ê¼¶æ»úµ±Ç°½Ç¶È (µ¥Î» ¡ã)
-float nextSrvYaw = 0; 	// Æ«º½½ÇµÄÔ­Ê¼¶æ»úÄ¿±ê½Ç¶È (µ¥Î» ¡ã)
-float nextSrvPitch = 0; // ¸©Ñö½ÇµÄÔ­Ê¼¶æ»úÄ¿±ê½Ç¶È (µ¥Î» ¡ã)
-float curYaw = 0; 		// ÔÆÌ¨µ±Ç°µÄÆ«º½½Ç (µ¥Î» ¡ã)
-float curPitch = 0; 	// ÔÆÌ¨µ±Ç°µÄ¸©Ñö½Ç (µ¥Î» ¡ã)
-float nextYaw = 0; 		// ÔÆÌ¨Ä¿±êµÄ¸©Ñö½Ç (µ¥Î» ¡ã)
-float nextPitch = 0; 	// ÔÆÌ¨Ä¿±êµÄÆ«º½½Ç (µ¥Î» ¡ã)
-float speedYaw = 0; 	// Æ«º½½Ç×ªËÙ (µ¥Î» ¡ã/s)
-float speedPitch = 0; 	// ¸©Ñö½Ç×ªËÙ (µ¥Î» ¡ã/s)
+// äº‘å°ä½å§¿çŠ¶æ€
+float curSrvYaw = 0; 	// åèˆªè§’çš„åŸå§‹èˆµæœºå½“å‰è§’åº¦ (å•ä½ Â°)
+float curSrvPitch = 0; 	// ä¿¯ä»°è§’çš„åŸå§‹èˆµæœºå½“å‰è§’åº¦ (å•ä½ Â°)
+float nextSrvYaw = 0; 	// åèˆªè§’çš„åŸå§‹èˆµæœºç›®æ ‡è§’åº¦ (å•ä½ Â°)
+float nextSrvPitch = 0; // ä¿¯ä»°è§’çš„åŸå§‹èˆµæœºç›®æ ‡è§’åº¦ (å•ä½ Â°)
+float curYaw = 0; 		// äº‘å°å½“å‰çš„åèˆªè§’ (å•ä½ Â°)
+float curPitch = 0; 	// äº‘å°å½“å‰çš„ä¿¯ä»°è§’ (å•ä½ Â°)
+float nextYaw = 0; 		// äº‘å°ç›®æ ‡çš„ä¿¯ä»°è§’ (å•ä½ Â°)
+float nextPitch = 0; 	// äº‘å°ç›®æ ‡çš„åèˆªè§’ (å•ä½ Â°)
+float speedYaw = 0; 	// åèˆªè§’è½¬é€Ÿ (å•ä½ Â°/s)
+float speedPitch = 0; 	// ä¿¯ä»°è§’è½¬é€Ÿ (å•ä½ Â°/s)
 
-// ÔÆÌ¨³õÊ¼»¯
+// äº‘å°åˆå§‹åŒ–
 void Gimbal_Init(Usart_DataTypeDef* servoUsart){
 	
-	// Éú³É¶æ»ú½Ç¶ÈÓ³ÉäÏà¹ØµÄÏµÊı
+	// ç”Ÿæˆèˆµæœºè§’åº¦æ˜ å°„ç›¸å…³çš„ç³»æ•°
 	Gimbal_GenSrvMapParams();
-	// ¶æ»úÔÆÌ¨ÖØÖÃ
+	// èˆµæœºäº‘å°é‡ç½®
 	Gimbal_Reset(servoUsart);
-	// ¸üĞÂÎ»×Ë
+	// æ›´æ–°ä½å§¿
 	Gimbal_Update(servoUsart);
 }
 
-// ÖØÖÃ¶æ»úÔÆÌ¨
+// é‡ç½®èˆµæœºäº‘å°
 void Gimbal_Reset(Usart_DataTypeDef* servoUsart){
 	uint16_t interval1, interval2;
-	// ÉèÖÃÎª³õÊ¼½Ç¶È
+	// è®¾ç½®ä¸ºåˆå§‹è§’åº¦
 	interval1 = Gimbal_SetYaw(servoUsart, YAW_INIT, YAW_SPEED_INIT);
 	interval2 = Gimbal_SetPitch(servoUsart, PITCH_INIT, PITCH_SPEED_INIT);
-	// ÑÓÊ±µÈ´ıÔÆÌ¨¸´Î»
+	// å»¶æ—¶ç­‰å¾…äº‘å°å¤ä½
 	interval1 = interval1 > interval2 ? interval1 : interval2;
 	SysTick_DelayMs(interval1);
 }
 
-// Éú³É¶æ»ú½Ç¶ÈÓ³ÉäÏà¹ØµÄÏµÊı
+// ç”Ÿæˆèˆµæœºè§’åº¦æ˜ å°„ç›¸å…³çš„ç³»æ•°
 void Gimbal_GenSrvMapParams(void){
 	K_yaw2srv = (YAW1_SERVO_ANGLE - YAW2_SERVO_ANGLE) / (YAW1 - YAW2);
 	b_yaw2srv = YAW1_SERVO_ANGLE - K_yaw2srv * YAW1;
@@ -62,83 +62,83 @@ void Gimbal_GenSrvMapParams(void){
 	b_srv2pitch = PITCH1 - K_srv2pitch * PITCH1_SERVO_ANGLE;	
 }
 
-// ¸üĞÂÆ«º½½Ç
+// æ›´æ–°åèˆªè§’
 void Gimbal_UpdateYaw(Usart_DataTypeDef* servoUsart){
 	FSUS_QueryServoAngle(servoUsart, SERVO_ID_YAW, &curSrvYaw);
 	curYaw = Gimbal_Servo2Yaw(curSrvYaw);
 }
 
-// ¸üĞÂ¸©Ñö½Ç
+// æ›´æ–°ä¿¯ä»°è§’
 void Gimbal_UpdatePitch(Usart_DataTypeDef* servoUsart){
 	FSUS_QueryServoAngle(servoUsart, SERVO_ID_PITCH, &curSrvPitch);
 	curPitch = Gimbal_Servo2Pitch(curSrvPitch);
 }
 
-// ¸üĞÂ¶æ»úÔÆÌ¨Î»×Ë
+// æ›´æ–°èˆµæœºäº‘å°ä½å§¿
 void Gimbal_Update(Usart_DataTypeDef* servoUsart){
 	Gimbal_UpdateYaw(servoUsart);
 	Gimbal_UpdatePitch(servoUsart);
 }
 
-// Æ«º½½Ç×ª»»Îª¶æ»ú½Ç¶È
+// åèˆªè§’è½¬æ¢ä¸ºèˆµæœºè§’åº¦
 float Gimbal_Yaw2Servo(float yaw){
 	return K_yaw2srv * yaw + b_yaw2srv;
 }
 
-// ¶æ»ú½Ç¶È×ª»»ÎªÆ«º½½Ç
+// èˆµæœºè§’åº¦è½¬æ¢ä¸ºåèˆªè§’
 float Gimbal_Servo2Yaw(float servo){
 	return K_srv2yaw * servo + b_srv2yaw;
 }
 	
-// ¸©Ñö½Ç×ª»»Îª¶æ»ú½Ç¶È
+// ä¿¯ä»°è§’è½¬æ¢ä¸ºèˆµæœºè§’åº¦
 float Gimbal_Pitch2Servo(float pitch){
 	return K_pitch2srv * pitch + b_pitch2srv;
 }
 
-// ¶æ»ú½Ç¶È×ª»»Îª¸©Ñö½Ç
+// èˆµæœºè§’åº¦è½¬æ¢ä¸ºä¿¯ä»°è§’
 float Gimbal_Servo2Pitch(float servo){
 	return K_srv2pitch * servo + b_srv2pitch;
 }
 
-// ÉèÖÃÔÆÌ¨µÄÆ«º½½Ç
+// è®¾ç½®äº‘å°çš„åèˆªè§’
 uint16_t Gimbal_SetYaw(Usart_DataTypeDef* servoUsart, float yaw, float speed){
 	uint16_t interval;
-	// ¸üĞÂ½Ç¶È
+	// æ›´æ–°è§’åº¦
 	Gimbal_UpdateYaw(servoUsart);
-	// ±ß½ç¼ì²â
+	// è¾¹ç•Œæ£€æµ‹
 	yaw = (yaw < YAW_MIN) ? YAW_MIN: yaw;
 	yaw = (yaw > YAW_MAX) ? YAW_MAX: yaw;
-	// Ä¿±ê½Ç¶È
+	// ç›®æ ‡è§’åº¦
 	nextYaw = yaw;
 	nextSrvYaw = Gimbal_Yaw2Servo(yaw);
-	// ¿ØÖÆ¶æ»úĞı×ª
-	interval = (uint16_t)__fabs(1000 * (curYaw - nextYaw) / speed); // Ê±¼ä¼ä¸ôµ¥Î»ms
+	// æ§åˆ¶èˆµæœºæ—‹è½¬
+	interval = (uint16_t)__fabs(1000 * (curYaw - nextYaw) / speed); // æ—¶é—´é—´éš”å•ä½ms
 	FSUS_SetServoAngle(servoUsart, SERVO_ID_YAW, nextSrvYaw, interval, 0, 0);
 	return interval;
 }
 
-// ÉèÖÃÔÆÌ¨µÄ¸©Ñö½Ç
+// è®¾ç½®äº‘å°çš„ä¿¯ä»°è§’
 uint16_t Gimbal_SetPitch(Usart_DataTypeDef* servoUsart, float pitch, float speed){
 	uint16_t interval;
-	// ¸üĞÂ½Ç¶È
+	// æ›´æ–°è§’åº¦
 	Gimbal_UpdatePitch(servoUsart);
-	// ±ß½ç¼ì²â
+	// è¾¹ç•Œæ£€æµ‹
 	pitch = (pitch < PITCH_MIN) ? PITCH_MIN : pitch;
 	pitch = (pitch > PITCH_MAX) ? PITCH_MAX : pitch;
-	// Ä¿±ê½Ç¶È
+	// ç›®æ ‡è§’åº¦
 	nextPitch = pitch;
 	nextSrvPitch = Gimbal_Pitch2Servo(pitch);
-	// ¿ØÖÆ¶æ»úĞı×ª
+	// æ§åˆ¶èˆµæœºæ—‹è½¬
 	interval = (uint16_t)__fabs(1000 *(curPitch - nextPitch) / speed);
 	FSUS_SetServoAngle(servoUsart, SERVO_ID_PITCH, nextSrvPitch, interval, 0, 0);
 	return interval;
 }
 
-// µÈ´ı¶æ»úĞı×ªµ½ÌØ¶¨µÄÎ»ÖÃ
+// ç­‰å¾…èˆµæœºæ—‹è½¬åˆ°ç‰¹å®šçš„ä½ç½®
 void Gimbal_Wait(Usart_DataTypeDef* servoUsart){
 	SysTick_DelayMs(10);
 	while(1){
-		// ¸üĞÂ½Ç¶È
+		// æ›´æ–°è§’åº¦
 		Gimbal_Update(servoUsart);
 		if (__fabs(curPitch - nextPitch) < SERVO_DEAD_BLOCK && __fabs(curYaw - nextYaw) < SERVO_DEAD_BLOCK){
 			break;

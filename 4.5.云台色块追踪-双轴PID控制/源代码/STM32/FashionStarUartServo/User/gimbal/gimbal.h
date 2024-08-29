@@ -1,5 +1,5 @@
 /*
- * 2DoF¶æ»úÔÆÌ¨Çı¶¯
+ * 2DoF??????
  * Author: Kyle
  * UpdateTime: 2019/12/13
  */
@@ -12,86 +12,86 @@
 #include "fashion_star_uart_servo.h"
 #include "sys_tick.h"
 
-// ÔÆÌ¨Çı¶¯Æ÷Ïà¹ØÉèÖÃ
-#define SERVO_ID_YAW 0 // Æ«º½½ÇµÄ¶æ»úID
-#define SERVO_ID_PITCH 1 // ¸©Ñö½ÇµÄ¶æ»úID
-#define SERVO_DEAD_BLOCK 2.0 // ¶æ»úËÀÇø
+// ?????????
+#define SERVO_ID_YAW 0 // ??????ID
+#define SERVO_ID_PITCH 1 // ??????ID
+#define SERVO_DEAD_BLOCK 2.0 // ????
 
-// ÔÆÌ¨¶æ»úµÄ±ê¶¨Êı¾İ
+// ?????????
 #define YAW1 90.0
 #define YAW1_SERVO_ANGLE -90.4
 #define YAW2 -90.0
 #define YAW2_SERVO_ANGLE 95.1
 
-#define PITCH1 60.0
-#define PITCH1_SERVO_ANGLE -66.2
-#define PITCH2 -90.0
-#define PITCH2_SERVO_ANGLE 86.3
+#define PITCH1 -60.0
+#define PITCH1_SERVO_ANGLE 66.2
+#define PITCH2 90.0
+#define PITCH2_SERVO_ANGLE -86.3
 
-// ÔÆÌ¨µÄ½Ç¶È·¶Î§
+// ???????
 #define YAW_MIN -90
 #define YAW_MAX 90
 #define PITCH_MIN -90
-#define PITCH_MAX 60
+#define PITCH_MAX 40
 
-// ÔÆÌ¨µÄ³õÊ¼Î»×Ë
+// ???????
 #define YAW_INIT 0.0
 #define YAW_SPEED_INIT 100.0
-#define PITCH_INIT -45.0
+#define PITCH_INIT 0.0
 #define PITCH_SPEED_INIT 100.0
 
-// Æ«º½½ÇÓë¶æ»ú½Ç¶È ÏßĞÔÓ³Éä
+// ???????? ????
 // servo = K_yaw2srv * yaw + b_yaw2srv
-extern float K_yaw2srv; // Æ«º½½Ç×ª»»Îª¶æ»ú½Ç¶ÈµÄ±ÈÀıÏµÊı
-extern float b_yaw2srv; // Æ«º½½Ç×ª»»Îª¶æ»ú½Ç¶ÈµÄÆ«ÒÆÁ¿
+extern float K_yaw2srv; // ???????????????
+extern float b_yaw2srv; // ??????????????
 // yaw = K_srv2yaw * servo + b_srv2yaw 
-extern float K_srv2yaw; // ¶æ»ú½Ç¶È×ª»»ÎªÆ«º½½ÇµÄ±ÈÀıÏµÊı
-extern float b_srv2yaw; // ¶æ»ú½Ç¶È×ª»»ÎªÆ«º½½ÇµÄÆ«ÒÆÁ¿
-// ¸©Ñö½ÇÓë¶æ»ú½Ç¶È (ÏßĞÔÓ³Éä)
+extern float K_srv2yaw; // ???????????????
+extern float b_srv2yaw; // ??????????????
+// ???????? (????)
 // servo = K_pitch2srv * pitch + b_yaw2srv
-extern float K_pitch2srv; // ¸©Ñö½Ç×ª»»Îª¶æ»ú½Ç¶ÈµÄ±ÈÀıÏµÊı
-extern float b_pitch2srv; // ¸©Ñö½Ç×ª»»Îª¶æ»ú½Ç¶ÈµÄÆ«ÒÆÁ¿
+extern float K_pitch2srv; // ???????????????
+extern float b_pitch2srv; // ??????????????
 // pitch = K_srv2pitch * servo + b_srv2pitch
-extern float K_srv2pitch; // ¶æ»ú½Ç¶È×ª»»Îª¸©Ñö½ÇµÄ±ÈÀıÏµÊı
-extern float b_srv2pitch; // ¶æ»ú½Ç¶È×ª»»Îª¸©Ñö½ÇµÄÆ«ÒÆÁ¿ 
+extern float K_srv2pitch; // ???????????????
+extern float b_srv2pitch; // ?????????????? 
 
-// ÔÆÌ¨Î»×Ë×´Ì¬
-extern float curSrvYaw; // Æ«º½½ÇµÄÔ­Ê¼¶æ»úµ±Ç°½Ç¶È (µ¥Î» ¡ã)
-extern float curSrvPitch; // ¸©Ñö½ÇµÄÔ­Ê¼¶æ»úµ±Ç°½Ç¶È (µ¥Î» ¡ã)
-extern float nextSrvYaw; // Æ«º½½ÇµÄÔ­Ê¼¶æ»úÄ¿±ê½Ç¶È (µ¥Î» ¡ã)
-extern float nextSrvPitch; // ¸©Ñö½ÇµÄÔ­Ê¼¶æ»úÄ¿±ê½Ç¶È (µ¥Î» ¡ã)
-extern float curYaw; // ÔÆÌ¨µ±Ç°µÄÆ«º½½Ç (µ¥Î» ¡ã)
-extern float curPitch; // ÔÆÌ¨µ±Ç°µÄ¸©Ñö½Ç (µ¥Î» ¡ã)
-extern float nextYaw; // ÔÆÌ¨Ä¿±êµÄ¸©Ñö½Ç (µ¥Î» ¡ã)
-extern float nextPitch; // ÔÆÌ¨Ä¿±êµÄÆ«º½½Ç (µ¥Î» ¡ã)
-extern float speedYaw; // Æ«º½½Ç×ªËÙ (µ¥Î» ¡ã/s)
-extern float speedPitch; // ¸©Ñö½Ç×ªËÙ (µ¥Î» ¡ã/s)
+// ??????
+extern float curSrvYaw; // ???????????? (?? )
+extern float curSrvPitch; // ???????????? (?? )
+extern float nextSrvYaw; // ???????????? (?? )
+extern float nextSrvPitch; // ???????????? (?? )
+extern float curYaw; // ???????? (?? )
+extern float curPitch; // ???????? (?? )
+extern float nextYaw; // ???????? (?? )
+extern float nextPitch; // ???????? (?? )
+extern float speedYaw; // ????? (?? /s)
+extern float speedPitch; // ????? (?? /s)
 
 
-// ÔÆÌ¨³õÊ¼»¯
+// ?????
 void Gimbal_Init(Usart_DataTypeDef* servoUsart);
-// Éú³É¶æ»ú½Ç¶ÈÓ³ÉäÏà¹ØµÄÏµÊı
+// ?????????????
 void Gimbal_GenSrvMapParams(void);
-// ÖØÖÃ¶æ»úÔÆÌ¨
+// ??????
 void Gimbal_Reset(Usart_DataTypeDef* servoUsart);
-// ¸üĞÂÆ«º½½Ç
+// ?????
 void Gimbal_UpdateYaw(Usart_DataTypeDef* servoUsart);
-// ¸üĞÂ¸©Ñö½Ç
+// ?????
 void Gimbal_UpdatePitch(Usart_DataTypeDef* servoUsart);
-// ¸üĞÂ¶æ»úÔÆÌ¨Î»×Ë
+// ????????
 void Gimbal_Update(Usart_DataTypeDef* servoUsart);
-// Æ«º½½Ç×ª»»Îª¶æ»ú½Ç¶È
+// ??????????
 float Gimbal_Yaw2Servo(float yaw);
-// ¶æ»ú½Ç¶È×ª»»ÎªÆ«º½½Ç
+// ??????????
 float Gimbal_Servo2Yaw(float servo);
-// ¸©Ñö½Ç×ª»»Îª¶æ»ú½Ç¶È
+// ??????????
 float Gimbal_Pitch2Servo(float pitch);
-// ¶æ»ú½Ç¶È×ª»»Îª¸©Ñö½Ç
+// ??????????
 float Gimbal_Servo2Pitch(float servo);
-// ÉèÖÃÔÆÌ¨µÄÆ«º½½Ç
+// ????????
 uint16_t Gimbal_SetYaw(Usart_DataTypeDef* servoUsart, float yaw, float speed);
-// ÉèÖÃÔÆÌ¨µÄ¸©Ñö½Ç
+// ????????
 uint16_t Gimbal_SetPitch(Usart_DataTypeDef* servoUsart, float pitch, float speed);
-// µÈ´ı¶æ»úĞı×ªµ½ÌØ¶¨µÄÎ»ÖÃ
+// ????????????
 void Gimbal_Wait(Usart_DataTypeDef* servoUsart);
 #endif

@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "button.h": "c",
+        "fashion_star_uart_servo.h": "c"
+    }
+}

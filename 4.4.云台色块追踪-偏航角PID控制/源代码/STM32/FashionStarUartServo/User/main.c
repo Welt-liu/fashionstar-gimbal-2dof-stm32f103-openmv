@@ -11,15 +11,15 @@
 #define TRUE 1
 #define FALSE 0
 
-#define IMG_WIDTH 320.0 // blob画面分辨率 宽度
-#define IMG_HEIGHT 240.0 // blob画面分辨率 高度
+#define IMG_WIDTH 160.0 // blob画面分辨率 宽度
+#define IMG_HEIGHT 120.0 // blob画面分辨率 高度
 #define BLOB_PKG_LEN 7 // blob数据包的长度
 #define BLOB_PKG_HEADER 0xFF // 帧头
 #define BLOB_PKG_CMD_ID 0xF1 // 指令ID
 
 // 云台偏航角PID控制
 #define DEAD_BLOCK 0.05
-#define GIMBAL_YAW_KP 32.0
+#define GIMBAL_YAW_KP 20.0
 #define GIMBAL_YAW_KD 2.0
 
 // 使用串口1作为舵机控制的端口

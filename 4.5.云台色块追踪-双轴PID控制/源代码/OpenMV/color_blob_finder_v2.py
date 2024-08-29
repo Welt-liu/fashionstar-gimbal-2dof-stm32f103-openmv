@@ -1,5 +1,5 @@
 '''
-色块识别
+双轴PID追踪
 1. 识别画面中的红色小球
 2. 将识别的到的色块位置,通过串口发送
 '''
@@ -10,7 +10,7 @@ import ustruct as struct
 from pyb import UART
 
 # 红色小球的LAB色彩空间阈值 (L Min, L Max, A Min, A Max, B Min, B Max)
-RED_BALL_THRESHOLD = (43, 82, 38, 86, -16, 67) # (57, 74, 38, 85, -21, 62)
+RED_BALL_THRESHOLD = (12,80,17,58,-15,55) # (57, 74, 38, 85, -21, 62)
 
 # 串口初始化
 uart = UART(3, 115200)
