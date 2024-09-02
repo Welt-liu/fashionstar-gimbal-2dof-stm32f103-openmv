@@ -30,8 +30,8 @@
 // 云台的角度范围
 #define YAW_MIN -90
 #define YAW_MAX 90
-#define PITCH_MIN -95
-#define PITCH_MAX 31.5
+#define PITCH_MIN -90
+#define PITCH_MAX 60
 
 // 云台的初始位姿
 #define YAW_INIT 0.0

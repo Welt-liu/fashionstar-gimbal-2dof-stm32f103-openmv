@@ -21,10 +21,10 @@
 
 // 云台偏航角PID控制
 #define DEAD_BLOCK 0.05
-#define GIMBAL_YAW_KP 40.0
-#define GIMBAL_YAW_KD 2.0
+#define GIMBAL_YAW_KP 20.0
+#define GIMBAL_YAW_KD 15.0
 // 云台俯仰角PID控制
-#define GIMBAL_PITCH_KP 20.0
+#define GIMBAL_PITCH_KP 15.0
 #define GIMBAL_PITCH_KD 3.0
 
 // 使用串口1作为舵机控制的端口

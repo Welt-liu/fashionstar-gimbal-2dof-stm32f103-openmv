@@ -5,6 +5,7 @@
 #include "usart.h"
 #include "sys_tick.h"
 #include "fashion_star_uart_servo.h"
+// #include "gimbal.h"
 #include "button.h"
 
 #define YAW_SERVO_ID 0
@@ -51,26 +52,30 @@ int main(void)
 	Usart_Init();	// 串口初始化
 	// Gimbal_Init(servoUsart);// 云台初始化
 	Button_Init();		   // 按键初始化
-	FSUS_SetServoAngle(servoUsart, YAW_SERVO_ID, yaw_set, 200, 0, 0);
-	FSUS_SetServoAngle(servoUsart, PIT_SERVO_ID, pitch_set, 200, 0, 0);
+				FSUS_SetServoAngle(servoUsart, YAW_SERVO_ID, yaw_set, 200, 0, 0);
+				FSUS_SetServoAngle(servoUsart, PIT_SERVO_ID, pitch_set, 200, 0, 0);
 	SysTick_DelayMs(2000); // 等待2s
+
+
 	while (1)
 	{
 		if (button_yaw_Flag)
 		{
+			button_yaw_Flag = 0;
+
 			printf("nextYaw: %.1f  nextPitch: %.1f\r\n", yaw_set, pitch_set);
 			FSUS_SetServoAngle(servoUsart, YAW_SERVO_ID, yaw_set, 200, 0, 0);
-			SysTick_DelayMs(100);
-			button_yaw_Flag = 0;
+			// Gimbal_SetYaw(servoUsart, nextYaw, servoSpeed);
 		}
 		if (button_pit_Flag)
 		{
-			printf("nextYaw: %.1f  nextPitch: %.1f\r\n", yaw_set, pitch_set);
-			FSUS_SetServoAngle(servoUsart, PIT_SERVO_ID, pitch_set, 200, 0, 0);
-			SysTick_DelayMs(100);
 			button_pit_Flag = 0;
 
+			printf("nextYaw: %.1f  nextPitch: %.1f\r\n", yaw_set, pitch_set);
+			FSUS_SetServoAngle(servoUsart, PIT_SERVO_ID, pitch_set, 200, 0, 0);
 		}
 
+		// 延时5ms 需要必要的延时，防止指令被覆盖
+		SysTick_DelayMs(200);
 	}
 }

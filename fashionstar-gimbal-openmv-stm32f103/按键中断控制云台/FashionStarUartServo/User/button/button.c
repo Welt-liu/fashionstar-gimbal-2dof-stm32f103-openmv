@@ -1,10 +1,5 @@
 #include "button.h"
 
-// 云台的角度范围
-#define YAW_MIN -90
-#define YAW_MAX 90
-#define PITCH_MIN -90
-#define PITCH_MAX 50
 
 float yaw_set = 0;			 // 云台偏航角
 float pitch_set = 0;		 // 云台俯仰角
