@@ -1,8 +1,7 @@
 /*
- * Fashion Star 串口舵机驱动库
- * Version: v0.0.1
- * Author: Kyle
- * UpdateTime: 2019/10/23
+ * Fashion Star 总线伺服舵机驱动库
+ * Version: v0.0.2
+ * UpdateTime: 2024/07/17
  */
  
 #ifndef __FASHION_STAR_USART_SERVO_H
@@ -22,7 +21,7 @@
 #define FSUS_SERVO_BATCH_DATA_SIZE 32
 // 返回的响应数据包最长的长度
 #define FSUS_PACK_RESPONSE_MAX_SIZE 50
-// 在串口舵机的通信系统设计里, 使用的字节序为Little Endian(低字节序/小端格式)
+// 在总线伺服舵机的通信系统设计里, 使用的字节序为Little Endian(低字节序/小端格式)
 // STM32系统的数值存储模式就是Little Endian
 // 所以0x4c12 这个数值, 在实际发送的时候低位会在前面 0x12, 0x4c
 #define FSUS_PACK_REQUEST_HEADER		0x4c12
@@ -30,16 +29,25 @@
 
 // FSUS控制指令数据
 // 注: 一下所有的指令都是针对单个舵机的
-#define FSUS_CMD_PING				1 // 舵机通讯检测
-#define FSUS_CMD_RESET_USER_DATA	2 // 重置用户数据
-#define FSUS_CMD_READ_DATA			3 // 单个舵机 读取数据库
-#define FSUS_CMD_WRITE_DATA			4 // 单个舵机 写入数据块
-#define FSUS_CMD_READ_BATCH_DATA	5 // 单个舵机 批次读取(读取一个舵机所有的数据)
-#define FSUS_CMD_WRITE_BATCH_DATA	6 // 单个舵机 批次写入(写入一个舵机所有的数据)
-#define FSUS_CMD_SPIN				7 // 单个舵机 设置轮式模式
-#define FSUS_CMD_ROTATE				8 // 角度控制模式(设置舵机的角度)) 
-#define FSUS_CMD_DAMPING			9 // 阻尼模式
-#define FSUS_CMD_READ_ANGLE			10 // 舵机角度读取
+#define FSUS_CMD_NUM 17
+#define FSUS_CMD_PING				1 					// 舵机通讯检测
+#define FSUS_CMD_RESET_USER_DATA	2 		// 重置用户数据
+#define FSUS_CMD_READ_DATA			3 			// 单个舵机 读取数据库
+#define FSUS_CMD_WRITE_DATA			4 			// 单个舵机 写入数据块
+#define FSUS_CMD_READ_BATCH_DATA	5 		// 单个舵机 批次读取(读取一个舵机所有的数据)
+#define FSUS_CMD_WRITE_BATCH_DATA	6 		// 单个舵机 批次写入(写入一个舵机所有的数据)
+#define FSUS_CMD_SPIN				7 					// 单个舵机 设置轮式模式
+#define FSUS_CMD_ROTATE				8 				// 角度控制模式(设置舵机的角度)) 
+#define FSUS_CMD_DAMPING			9 				// 阻尼模式
+#define FSUS_CMD_READ_ANGLE			10 			// 舵机角度读取
+#define FSUS_CMD_SET_SERVO_ANGLE_BY_INTERVAL  11 			// 角度设置(指定周期)
+#define FSUS_CMD_SET_SERVO_ANGLE_BY_VELOCITY 12  			// 角度设置(指定转速)
+#define FSUS_CMD_SET_SERVO_ANGLE_MTURN 13 			 			// 多圈角度设置
+#define FSUS_CMD_SET_SERVO_ANGLE_MTURN_BY_INTERVAL 14 // 多圈角度设置(指定周期)
+#define FSUS_CMD_SET_SERVO_ANGLE_MTURN_BY_VELOCITY 15 // 多圈角度设置(指定转速)
+#define FSUS_CMD_QUERY_SERVO_ANGLE_MTURN 16 					// 查询舵机角度(多圈)
+#define FSUS_CMD_RESERT_SERVO_ANGLE_MTURN 17 					// 重置舵机多圈角度
+#define FSUS_CMD_SET_ORIGIN_POINT	23 			// 设置零点
 
 // FSUS状态码
 #define FSUS_STATUS uint8_t
@@ -51,6 +59,28 @@
 #define FSUS_STATUS_SIZE_TOO_BIG 5 // 参数的size大于FSUS_PACK_RESPONSE_MAX_SIZE里面的限制
 #define FSUS_STATUS_CHECKSUM_ERROR 6 // 校验和错误
 #define FSUS_STATUS_ID_NOT_MATCH 7 // 请求的舵机ID跟反馈回来的舵机ID不匹配
+
+// 静止状态判断条件
+#define FSUS_ANGLE_DEADAREA 1.0f // 电机角度死区
+#define FSUS_WAIT_COUNT_MAX 10000 // 等待重复查询角度的最大次数
+
+/* 舵机只读数据ID及使用说明 (只读)*/
+#define FSUS_PARAM_VOLTAGE 1 // 电压 (单位mV)
+#define FSUS_PARAM_CURRENT 2 // 电流 (单位mA)
+#define FSUS_PARAM_POWER 3 // 功率 (单位0.1度)
+#define FSUS_PARAM_TEMPRATURE 4//温度 （单位ADC）
+/*
+舵机工作状态 
+BIT[0] - 执行指令置1，执行完成后清零。
+BIT[1] - 执行指令错误置1，在下次正确执行后清零。
+BIT[2] - 堵转错误置1，解除堵转后清零。
+BIT[3] - 电压过高置1，电压恢复正常后清零。
+BIT[4] - 电压过低置1，电压恢复正常后清零。
+BIT[5] - 电流错误置1，电流恢复正常后清零。
+BIT[6] - 功率错误置1，功率恢复正常后清零。
+BIT[7] - 温度错误置1，温度恢复正常后清零。
+*/
+#define FSUS_PARAM_SERVO_STATUS 5 // 舵机工作状态 (字节长度 1)
 
 
 /* 舵机用户自定义参数的数据ID及使用说明 (可度也可写)*/
@@ -176,14 +206,14 @@
 
 // 轮式模式参数定义
 // Bit 0 是否运行
-#define FSUS_SPIN_METHOD_STOP 0x00 // 轮子停止旋转
-#define FSUS_SPIN_METHOD_START 0x01 // 轮子旋转
-#define FSUS_SPIN_METHOD_CIRCLE 0x02 // 轮子定圈
-#define FSUS_SPIN_METHOD_TIME 0x03 // 轮子定时
-#define FSUS_SPIN_METHOD_CCW 0x00 // 轮子逆时针旋转
-#define FSUS_SPIN_METHOD_CW 0x80 // 轮子顺时针旋转
+#define FSUS_SPIN_METHOD_STOP 0x00 // 停止旋转
+#define FSUS_SPIN_METHOD_START 0x01 // 旋转
+#define FSUS_SPIN_METHOD_CIRCLE 0x02 // 定圈
+#define FSUS_SPIN_METHOD_TIME 0x03 // 定时
+#define FSUS_SPIN_METHOD_CCW 0x00 // 逆时针旋转
+#define FSUS_SPIN_METHOD_CW 0x80 // 顺时针旋转
 
-// 串口舵机用户自定义设置 
+// 总线伺服舵机用户自定义设置 
 // 是否开启响应模式
 #define FSUS_IS_RESPONSE_ON 0
 
@@ -223,54 +253,84 @@ FSUS_STATUS FSUS_RecvPackage(Usart_DataTypeDef *usart, PackageTypeDef *pkg);
 
 // 舵机通讯检测
 // 注: 如果没有舵机响应这个Ping指令的话, 就会超时
-FSUS_STATUS FSUS_Ping(Usart_DataTypeDef *usart, uint8_t servoId);
+FSUS_STATUS FSUS_Ping(Usart_DataTypeDef *usart, uint8_t servo_id);
 
 // 重置舵机的用户资料
-FSUS_STATUS FSUS_ResetUserData(Usart_DataTypeDef *usart, uint8_t servoId);
+FSUS_STATUS FSUS_ResetUserData(Usart_DataTypeDef *usart, uint8_t servo_id);
 
 // 读取数据
-FSUS_STATUS FSUS_ReadData(Usart_DataTypeDef *usart, uint8_t servoId,  uint8_t address, uint8_t *value, uint8_t *size);
+FSUS_STATUS FSUS_ReadData(Usart_DataTypeDef *usart, uint8_t servo_id,  uint8_t address, uint8_t *value, uint8_t *size);
 
 // 写入数据
-FSUS_STATUS FSUS_WriteData(Usart_DataTypeDef *usart, uint8_t servoId, uint8_t address, uint8_t *value, uint8_t size);
+FSUS_STATUS FSUS_WriteData(Usart_DataTypeDef *usart, uint8_t servo_id, uint8_t address, uint8_t *value, uint8_t size);
 
-// 读取单个舵机所有的资料信息(注: 未实现) 
-// 写入单个舵机所有的资料信息(注: 未实现)
-// 批次写入过于麻烦, 用户手动配置单个舵机就得写至少32行参数设置代码
-// 而且不同的控制模式, 有些是不需要设置的.
-// 推荐单项设置
+
 
 /* 
- * 轮式控制模式
+ * 轮转模式
  * speed单位 °/s
  */
-FSUS_STATUS FSUS_WheelMove(Usart_DataTypeDef *usart, uint8_t servoId, uint8_t method, uint16_t speed, uint16_t value);
+FSUS_STATUS FSUS_WheelMove(Usart_DataTypeDef *usart, uint8_t servo_id, uint8_t method, uint16_t speed, uint16_t value);
 
-// 轮式模式, 舵机停止转动
-FSUS_STATUS FSUS_WheelStop(Usart_DataTypeDef *usart, uint8_t servoId);
+// 轮转模式, 舵机停止转动
+FSUS_STATUS FSUS_WheelStop(Usart_DataTypeDef *usart, uint8_t servo_id);
 
-// 轮式模式 不停的旋转? TODO 待确认
-FSUS_STATUS FSUS_WheelKeepMove(Usart_DataTypeDef *usart, uint8_t servoId, uint8_t is_cw, uint16_t speed);
+// 轮转模式 不停的旋转
+FSUS_STATUS FSUS_WheelKeepMove(Usart_DataTypeDef *usart, uint8_t servo_id, uint8_t is_cw, uint16_t speed);
 
-// 轮式模式 按照特定的速度旋转特定的时间
-FSUS_STATUS FSUS_WheelMoveTime(Usart_DataTypeDef *usart, uint8_t servoId, uint8_t is_cw, uint16_t speed, uint16_t nTime);
+// 轮转模式 按照特定的速度旋转特定的时间
+FSUS_STATUS FSUS_WheelMoveTime(Usart_DataTypeDef *usart, uint8_t servo_id, uint8_t is_cw, uint16_t speed, uint16_t nTime);
 
-// 轮式模式 旋转特定的圈数
-FSUS_STATUS FSUS_WheelMoveNCircle(Usart_DataTypeDef *usart, uint8_t servoId, uint8_t is_cw, uint16_t speed, uint16_t nCircle);
+// 轮转模式 旋转特定的圈数
+FSUS_STATUS FSUS_WheelMoveNCircle(Usart_DataTypeDef *usart, uint8_t servo_id, uint8_t is_cw, uint16_t speed, uint16_t nCircle);
 
 // 设置舵机的角度
 // @angle 单位度
 // @interval 单位ms
 // @power 舵机执行功率 单位mW
 //        若power=0或者大于保护值
-FSUS_STATUS FSUS_SetServoAngle(Usart_DataTypeDef *usart, uint8_t servoId, float angle, uint16_t interval, uint16_t power, uint8_t wait);
+FSUS_STATUS FSUS_SetServoAngle(Usart_DataTypeDef *usart, uint8_t servo_id, float angle, uint16_t interval, uint16_t power, uint8_t wait);
 
-// 查询单个舵机的角度信息 angle 单位度
-FSUS_STATUS FSUS_QueryServoAngle(Usart_DataTypeDef *usart, uint8_t servoId, float *angle);
 
-// 舵机阻尼模式
-FSUS_STATUS FSUS_DampingMode(Usart_DataTypeDef *usart, uint8_t servoId, uint16_t power);
+/* 设置舵机的角度(指定周期) */
+FSUS_STATUS FSUS_SetServoAngleByInterval(Usart_DataTypeDef *usart, uint8_t servo_id, \
+				float angle, uint16_t interval, uint16_t t_acc, \
+				uint16_t t_dec, uint16_t  power, uint8_t wait);
 
-// TODO 其他具体参数设置对应的API
+/* 设置舵机的角度(指定转速) */
+FSUS_STATUS FSUS_SetServoAngleByVelocity(Usart_DataTypeDef *usart, uint8_t servo_id, \
+				float angle, float velocity, uint16_t t_acc, \
+				uint16_t t_dec, uint16_t  power, uint8_t wait);
+
+
+/* 查询单个舵机的角度信息 angle 单位度 */ 
+FSUS_STATUS FSUS_QueryServoAngle(Usart_DataTypeDef *usart, uint8_t servo_id, float *angle);
+
+/* 设置舵机的角度(多圈模式) */
+FSUS_STATUS FSUS_SetServoAngleMTurn(Usart_DataTypeDef *usart, uint8_t servo_id, float angle, \
+			uint32_t interval, uint16_t power, uint8_t wait);
+
+/* 设置舵机的角度(多圈模式, 指定周期) */
+FSUS_STATUS FSUS_SetServoAngleMTurnByInterval(Usart_DataTypeDef *usart, uint8_t servo_id, float angle, \
+			uint32_t interval,  uint16_t t_acc,  uint16_t t_dec, uint16_t power, uint8_t wait);
+
+/* 设置舵机的角度(多圈模式, 指定转速) */
+FSUS_STATUS FSUS_SetServoAngleMTurnByVelocity(Usart_DataTypeDef *usart, uint8_t servo_id, float angle, \
+			float velocity, uint16_t t_acc,  uint16_t t_dec, uint16_t power, uint8_t wait);
+
+/* 查询舵机的角度(多圈模式) */
+FSUS_STATUS FSUS_QueryServoAngleMTurn(Usart_DataTypeDef *usart, uint8_t servo_id, float *angle);
+
+/* 舵机阻尼模式 */
+FSUS_STATUS FSUS_DampingMode(Usart_DataTypeDef *usart, uint8_t servo_id, uint16_t power);
+
+/* 等待电机旋转到特定的位置 */
+FSUS_STATUS FSUS_Wait(Usart_DataTypeDef *usart, uint8_t servo_id, float target_angle, uint8_t is_mturn);
+
+/*重置多圈舵机角度*/ 
+FSUS_STATUS FSUS_ServoAngleReset(Usart_DataTypeDef *usart, uint8_t servo_id);
+
+/*零点设置 仅适用于无刷磁编码舵机*/
+FSUS_STATUS FSUS_SetOriginPoint(Usart_DataTypeDef *usart, uint8_t servo_id);
 
 #endif
