@@ -35,3 +35,4 @@
 ..\output\fashion_star_uart_servo.o: ..\User\ring_buffer\ring_buffer.h
 ..\output\fashion_star_uart_servo.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 ..\output\fashion_star_uart_servo.o: ..\User\sys_tick\sys_tick.h
+..\output\fashion_star_uart_servo.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

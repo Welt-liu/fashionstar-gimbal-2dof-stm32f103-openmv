@@ -20,12 +20,12 @@
 #define BLOB_PKG_CMD_ID_TAG2 0xA2 // 指令ID
 
 // 云台偏航角PID控制
-#define DEAD_BLOCK 0.1
-#define GIMBAL_YAW_KP 15.0
-#define GIMBAL_YAW_KD 0.0
+#define DEAD_BLOCK 0.01
+#define GIMBAL_YAW_KP 20.0
+#define GIMBAL_YAW_KD 5.0
 // 云台俯仰角PID控制
-#define GIMBAL_PITCH_KP 5.0
-#define GIMBAL_PITCH_KD 0.0
+#define GIMBAL_PITCH_KP 20.0
+#define GIMBAL_PITCH_KD 9.0
 
 // 使用串口1作为舵机控制的端口
 // <接线说明>
@@ -144,10 +144,10 @@ void GimbalYawPIDCtl()
 
 	// 计算得到偏航角的增量
 	dYaw = GIMBAL_YAW_KP * curXOffset + GIMBAL_YAW_KD * (lastXOffset - curXOffset);
+
 	// 云台偏航角控制
 	Gimbal_SetYaw(servoUsart, curYaw + dYaw, servoSpeed);
 
-	printf("YAW PID: dYaw = %.1f next yaw = %.1f\r\n", dYaw, curYaw + dYaw);
 }
 
 // 云台俯仰角 PID控制
@@ -168,9 +168,9 @@ void GimbalPitchPIDCtl()
 	// 计算得到偏航角的增量
 	dPitch = GIMBAL_PITCH_KP * curYOffset + GIMBAL_PITCH_KD * (lastYOffset - curYOffset);
 	// 云台偏航角控制
-	Gimbal_SetPitch(servoUsart, curPitch + dPitch, 500);
+	Gimbal_SetPitch(servoUsart, curPitch + dPitch, 1000);
 
-	printf("YAW PID: dPitch = %.1f next pitch = %.1f\r\n", dPitch, curPitch + dPitch);
+//	printf("YAW PID: dPitch = %.1f next pitch = %.1f\r\n", dPitch, curPitch + dPitch);
 }
 static uint16_t curState = 0; // 当前状态
 // 巡视模式
@@ -279,6 +279,6 @@ int main(void)
 		}
 
 		// 延时1ms
-		// SysTick_DelayMs(1);
+		SysTick_DelayMs(1);
 	}
 }

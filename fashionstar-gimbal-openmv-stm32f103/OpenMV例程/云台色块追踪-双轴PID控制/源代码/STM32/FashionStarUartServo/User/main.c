@@ -17,12 +17,13 @@
 #define BLOB_PKG_CMD_ID 0xF1 // 指令ID
 
 // 云台偏航角PID控制
-#define DEAD_BLOCK 0.05
-#define GIMBAL_YAW_KP 50.0
-#define GIMBAL_YAW_KD 2.0
+#define DEAD_BLOCK 0.01
+#define GIMBAL_YAW_KP 20.0
+#define GIMBAL_YAW_KD 5.0
 // 云台俯仰角PID控制
-#define GIMBAL_PITCH_KP 40.0
-#define GIMBAL_PITCH_KD 3.0
+#define GIMBAL_PITCH_KP 20.0
+#define GIMBAL_PITCH_KD 9.0
+
 
 // 使用串口1作为舵机控制的端口
 // <接线说明>
@@ -162,7 +163,7 @@ int main (void)
 	SysTick_Init(); 		// 嘀嗒定时器初始化
 	Usart_Init(); 			// 串口初始化
 	Gimbal_Init(servoUsart);// 云台初始化
-	
+	FSUS_WheelKeepMove(servoUsart, 3, 0, 500);
 	while(1){
 		// 更新色块的位置信息
 		if (RingBuffer_GetByteUsed(blobUsart->recvBuf) >= BLOB_PKG_LEN) {
