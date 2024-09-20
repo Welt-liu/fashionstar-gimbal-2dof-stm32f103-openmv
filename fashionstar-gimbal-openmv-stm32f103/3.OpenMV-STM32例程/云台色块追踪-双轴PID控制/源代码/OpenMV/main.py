@@ -10,7 +10,7 @@ import ustruct as struct
 from pyb import UART
 
 # 红色小球的LAB色彩空间阈值 (L Min, L Max, A Min, A Max, B Min, B Max)
-RED_BALL_THRESHOLD = (33, 77, 38, 58, -15, 55) # (57, 74, 38, 85, -21, 62)
+RED_BALL_THRESHOLD =  (12,80,17,58,-15,55) # (57, 74, 38, 85, -21, 62)
 
 # 串口初始化
 uart = UART(3, 115200)

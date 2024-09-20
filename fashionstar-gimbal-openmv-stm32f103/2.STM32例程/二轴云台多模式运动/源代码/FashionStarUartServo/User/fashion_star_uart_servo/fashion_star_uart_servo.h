@@ -61,7 +61,7 @@
 #define FSUS_STATUS_ID_NOT_MATCH 7 // 请求的舵机ID跟反馈回来的舵机ID不匹配
 
 // 静止状态判断条件
-#define FSUS_ANGLE_DEADAREA 2.0f // 电机角度死区
+#define FSUS_ANGLE_DEADAREA 3.0f // 电机角度死区
 #define FSUS_WAIT_COUNT_MAX 10000 // 等待重复查询角度的最大次数
 
 /* 舵机只读数据ID及使用说明 (只读)*/
